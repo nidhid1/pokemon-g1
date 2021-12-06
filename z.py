@@ -65,8 +65,8 @@ classes=['ARSON','ASSAULT','BAD CHECKS','BRIBERY','BURGLARY','DISORDERLY CONDUCT
          'FRAUD','GAMBLING','KIDNAPPING','LARCENY/THEFT','LIQUOR LAWS','LOITERING','MISSING PERSON','NON-CRIMINAL','OTHER OFFENSES','PORNOGRAPHY','PORNOGRAPHY/OBSCENE MAT','PROSTITUTION','RECOVERED VEHICLE','ROBBERY',\
          'RUNAWAY','SECONDARY CODES','SEX OFFENSES FORCIBLE','SEX OFFENSEES NON FORCIBLE','STOLEN PROPERTY','SUICIDE','SUSPICIOUS OCC','TREA','TRESPASS','VANDALISM','VEHICLE THEFT','WARRANTS','WEAPON LAWS']
 days_list=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
-address_list=list(np.unique(df['Address']))
-pdDist_list=list(np.unique(df['PdDistrict']))
+address_list=list()
+pdDist_list=list()
 def transform(df,l):
     z=[]
     for i in df:
@@ -75,7 +75,7 @@ def transform(df,l):
         g=l.index(i)
         z.append(g)
     return z
-def preprocess(df):
+def preprocess(df,address_list,pdDist_list):
 
 	hour=[]
 	for time in df['Dates']:
@@ -110,7 +110,7 @@ def readTrain(rdd):
 		      row = spark.read.json(rdd1)
 		      if(len(row.columns) == 9):
 		        df = df.union(row)
-		  df = preprocessing(df)
+		  df = preprocessing(df,address_list,pdDist_list)
 		  df.show()
 		  y=df['Category']
 		  X=df.drop(columns=['Category'])
@@ -133,7 +133,7 @@ def readTest(rdd):
 		      if(len(row.columns) == 7):
 		        df = df.union(row)
 		  df=df.drop(columns=['Id'])
-		  df = preprocessing(df)
+		  df = preprocessing(df,address_list,pdDist_list)
 		  sgd_pred=sgd_clf.predict(df)
 		  sdgr_pred=clf.predict(df)
 		  kmeans_pred=kmeans.predict(df)
