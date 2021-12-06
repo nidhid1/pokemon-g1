@@ -59,7 +59,6 @@ sc.setLogLevel("OFF")
 ssc = StreamingContext(sc, 1)
 spark=SparkSession(sc)
 data = ssc.socketTextStream("localhost", 6100) 
-df=pd.read_csv('C:/Users/nidhi/Downloads/train(2).csv',nrows=3000)
 c_len=[i for i in range(40)]
 classes=['ARSON','ASSAULT','BAD CHECKS','BRIBERY','BURGLARY','DISORDERLY CONDUCT','DRIVING UNDER THE INFLUENCE','DRUG/NARCOTIC','DRUNKENNESS','EMBEZZLEMENT','EXTORTION','FAMILY OFFENSES','FORGERY/COUNTERFEITING',\
          'FRAUD','GAMBLING','KIDNAPPING','LARCENY/THEFT','LIQUOR LAWS','LOITERING','MISSING PERSON','NON-CRIMINAL','OTHER OFFENSES','PORNOGRAPHY','PORNOGRAPHY/OBSCENE MAT','PROSTITUTION','RECOVERED VEHICLE','ROBBERY',\
@@ -89,7 +88,7 @@ def preprocess(df,address_list,pdDist_list):
         	hours=0
     	hour.append(hours)
 	df['Time']=hour
-	#df=df.drop(['Dates','Descript','Resolution'],axis=1)
+	df=df.drop(['Dates','Descript','Resolution'],axis=1)
 	df['Category']=transform(df['Category'],classes)
 	df['DayOfWeek']=transform(df['DayOfWeek'],days_list)
 
