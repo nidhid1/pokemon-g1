@@ -99,13 +99,13 @@ def preprocess(df):
 def readTrain(rdd): 
 		
 		if(len(rdd.collect()) > 0):
-		  val = json.loads(rdd.collect()[0])
-		  keys = val.keys()
+		  value = json.loads(rdd.collect()[0])
+		  keys = value.keys()
 		  df = spark.createDataFrame([], format_train)
-		  for key in val :
+		  for key in value :
 		    
 		  
-		    rdd1 = sc.parallelize([val[key]])
+		    rdd1 = sc.parallelize([value[key]])
 		    if(not rdd1.isEmpty()):
 		      row = spark.read.json(rdd1)
 		      if(len(row.columns) == 9):
@@ -121,20 +121,19 @@ def readTrain(rdd):
 def readTest(rdd): 
 		
 		if(len(rdd.collect()) > 0):
-		  val = json.loads(rdd.collect()[0])
-		  keys = val.keys()
+		  value = json.loads(rdd.collect()[0])
+		  keys = value.keys()
 		  df = spark.createDataFrame([], format_test)
-		  for key in val :
+		  for key in value :
 		    
 		  
-		    rdd1 = sc.parallelize([val[key]])
+		    rdd1 = sc.parallelize([value[key]])
 		    if(not rdd1.isEmpty()):
 		      row = spark.read.json(rdd1)
 		      if(len(row.columns) == 7):
 		        df = df.union(row)
 		  df=df.drop(columns=['Id'])
 		  df = preprocessing(df)
-		  df.show()
 		  sgd_pred=sgd_clf.predict(df)
 		  sdgr_pred=clf.predict(df)
 		  kmeans_pred=kmeans.predict(df)
